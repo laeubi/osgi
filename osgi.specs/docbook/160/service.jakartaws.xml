@@ -246,6 +246,126 @@ public class SOAPLoggingHandler implements SOAPHandler&lt;SOAPMessageContext&gt;
  as they run in separate processing phases. The detailed rules for handler ordering across different handler types are described in the 
  Jakarta™ XML Web Services specification (see <xref linkend="service.jakartaws-handler-ordering"/>).
 </para>
+
+<section xml:id="service.jakartaws.handler.execution.rationale">
+<title>Understanding Handler Execution Order</title>
+
+<para>
+The Jakarta™ XML Web Services specification defines a specific handler execution model that may initially seem counterintuitive.
+Understanding the rationale behind this design is important for correctly implementing handler chains, especially when working with
+different Jakarta specifications that have different execution models.
+</para>
+
+<section>
+<title>Jakarta™ XML Web Services Handler Execution Model</title>
+
+<para>
+As specified in <xref linkend="service.jakartaws-handler-execution"/>, the Jakarta™ XML Web Services handler execution follows these rules:
+</para>
+
+<itemizedlist>
+  <listitem>
+    <para><emphasis>Outbound messages</emphasis>: Handler processing starts with the first handler in the chain and proceeds in the same order as the handler chain.</para>
+  </listitem>
+  <listitem>
+    <para><emphasis>Inbound messages</emphasis>: The order of processing is reversed - processing starts with the last handler in the chain and proceeds backwards.</para>
+  </listitem>
+</itemizedlist>
+
+<para>
+This bidirectional processing model is designed to support the layered nature of SOAP message processing. The key insight is that handlers
+often work in complementary pairs during request and response processing. Consider these common use cases:
+</para>
+
+<orderedlist>
+  <listitem>
+    <para><emphasis>Security Processing</emphasis>: A security handler might encrypt or sign parts of an outbound SOAP message.
+    On the inbound response, the same handler needs to decrypt or verify signatures. The reversed execution order ensures that
+    the security handler that processed the outbound request is also the one that processes the corresponding inbound response,
+    maintaining proper context and state.</para>
+  </listitem>
+  <listitem>
+    <para><emphasis>Logging and Monitoring</emphasis>: A logging handler positioned early in the chain for outbound messages
+    can log the original message before any transformations. For inbound messages, by being processed last (reversed order),
+    it logs the final processed response. This creates a symmetrical logging pattern around the entire message flow.</para>
+  </listitem>
+  <listitem>
+    <para><emphasis>Message Transformation</emphasis>: Protocol handlers (SOAPHandler) work at the SOAP message level and need
+    to process messages before logical handlers (LogicalHandler) on outbound messages. On inbound messages, the reverse is needed -
+    logical handlers should see the message after protocol-level processing is complete. The reversed execution naturally provides
+    this layering.</para>
+  </listitem>
+</orderedlist>
+
+<para>
+This model creates a "tunnel" or "onion layer" pattern where each handler wraps the message processing, processing it on the way out
+and unwrapping it on the way back in. This is particularly important for SOAP-based web services where message integrity,
+security, and proper protocol layering are critical.
+</para>
+</section>
+
+<section>
+<title>Comparison with Jakarta™ RESTful Web Services</title>
+
+<para>
+In contrast, Jakarta™ RESTful Web Services (Jakarta REST) uses a different execution model for its filters,
+as defined in the <xref linkend="service.jakartaws-jakarta-restful-spec"/>. Jakarta REST filters execute in priority order
+for <emphasis>both</emphasis> request and response processing. Higher priority filters execute first for requests,
+and also execute first for responses.
+</para>
+
+<para>
+The Jakarta REST specification Section 6.5.1 "Priorities" (see <xref linkend="service.jakartaws-jakarta-restful-priorities"/>)
+states that filters are sorted by priority and executed in that same order for both the request and response phases.
+This means that unlike Jakarta XML Web Services, there is no reversal of execution order between requests and responses in Jakarta REST.
+</para>
+
+<para>
+This difference stems from the different architectural models:
+</para>
+
+<itemizedlist>
+  <listitem>
+    <para><emphasis>Jakarta REST</emphasis> is designed around a resource-oriented, stateless HTTP model where filters typically
+    perform independent operations like authentication, logging, or content negotiation. The uniform execution order simplifies
+    reasoning about filter behavior and is well-suited to the stateless nature of REST services.</para>
+  </listitem>
+  <listitem>
+    <para><emphasis>Jakarta XML Web Services</emphasis> is based on SOAP, a protocol-oriented model with complex message structures
+    that often require paired processing (encrypt/decrypt, sign/verify). The reversed execution order naturally supports these
+    complementary operations and maintains proper protocol layering.</para>
+  </listitem>
+</itemizedlist>
+
+<para>
+When working with both Jakarta XML Web Services and Jakarta RESTful Web Services in the same application, developers should be
+aware of these execution model differences:
+</para>
+
+<itemizedlist>
+  <listitem>
+    <para>Jakarta XML Web Services handlers should be designed expecting reversed execution on inbound messages</para>
+  </listitem>
+  <listitem>
+    <para>Jakarta REST filters should be designed expecting the same execution order for both requests and responses</para>
+  </listitem>
+  <listitem>
+    <para>Code that works with one model cannot be directly ported to the other without considering these execution differences</para>
+  </listitem>
+  <listitem>
+    <para>When designing cross-cutting concerns that span both SOAP and REST services, the implementation must account for
+    the different execution semantics</para>
+  </listitem>
+</itemizedlist>
+
+<para>
+This specification follows the Jakarta™ XML Web Services execution model as defined in
+<xref linkend="service.jakartaws-handler-execution"/>. Implementors should carefully consider handler positioning
+in the chain based on the bidirectional processing model and the handler's role in the message flow.
+</para>
+</section>
+</section>
+
 </section>
     <section xml:id="service.jakartaws.handler.services.target">
          <title>Targeting specific Endpoint Implementor</title>
@@ -667,6 +787,22 @@ public class SOAPLoggingHandler implements SOAPHandler&lt;SOAPMessageContext&gt;
 
         <biblioid class="uri">
           <link xlink:href="https://www.iana.org/assignments/media-type-structured-suffix/media-type-structured-suffix.xhtml"/>
+        </biblioid>
+      </bibliomixed>
+
+      <bibliomixed xml:id="service.jakartaws-jakarta-restful-spec">
+        <title>Jakarta™ RESTful Web Services Specification</title>
+
+        <biblioid class="uri">
+          <link xlink:href="https://jakarta.ee/specifications/restful-ws/4.0/jakarta-restful-ws-spec-4.0.html"/>
+        </biblioid>
+      </bibliomixed>
+
+      <bibliomixed xml:id="service.jakartaws-jakarta-restful-priorities">
+        <title>Jakarta™ RESTful Web Services Priorities</title>
+
+        <biblioid class="uri">
+          <link xlink:href="https://jakarta.ee/specifications/restful-ws/4.0/jakarta-restful-ws-spec-4.0.html#priorities"/>
         </biblioid>
       </bibliomixed>
 
