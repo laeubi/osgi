@@ -194,8 +194,23 @@ public class SOAPLoggingHandler implements SOAPHandler&lt;SOAPMessageContext&gt;
     
 }</programlisting>
 <para>
- Handlers will be added to the Endpoint in service ranking order, that means that Handlers with a higher service ranking will be called before those with a lower service ranking.
- If two handlers have the same ranking they are sorted according to their service id, having handlers registered later being called later in the handler chain. 
+ Handlers are assembled into a handler chain in service ranking order. This means that Handlers with a higher service ranking will be positioned before those with a lower service ranking in the chain.
+ If two handlers have the same ranking they are sorted according to their service id, with handlers registered later being positioned later in the handler chain. 
+</para>
+<para>
+ This handler chain is then passed to the Jakarta™ XML Web Services implementation. It is important to understand that the Jakarta™ XML Web Services runtime processes the handler chain differently depending on the message direction,
+ as specified in <xref linkend="service.jakartaws-handler-execution"/>:
+ <itemizedlist>
+   <listitem>
+     <para><emphasis>For outbound messages</emphasis>: Handler processing starts with the first handler in the chain and proceeds in the same order as the handler chain. This means the handler with the highest service ranking is processed first.</para>
+   </listitem>
+   <listitem>
+     <para><emphasis>For inbound messages</emphasis>: The order of processing is reversed. Processing starts with the last handler in the chain and proceeds in the reverse order of the handler chain. This means the handler with the lowest service ranking is processed first.</para>
+   </listitem>
+ </itemizedlist>
+</para>
+<para>
+ As a result, while handlers are assembled in order of service ranking (highest first), the actual processing order depends on the message direction. Users should be aware of this distinction to avoid confusion about handler execution order.
 </para>
 </section>
     <section xml:id="service.jakartaws.handler.services.target">
@@ -537,6 +552,14 @@ public class SOAPLoggingHandler implements SOAPHandler&lt;SOAPMessageContext&gt;
 
         <biblioid class="uri">
           <link xlink:href="https://jakarta.ee/specifications/xml-web-services/4.0/apidocs/jakarta.xml.ws/jakarta/xml/ws/endpoint"/>
+        </biblioid>
+      </bibliomixed>
+      
+      <bibliomixed xml:id="service.jakartaws-handler-execution">
+        <title>Jakarta™ XML Web Services Handler Execution</title>
+
+        <biblioid class="uri">
+          <link xlink:href="https://jakarta.ee/specifications/xml-web-services/4.0/jakarta-xml-ws-spec-4.0#handlerexecution"/>
         </biblioid>
       </bibliomixed>
       
