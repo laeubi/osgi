@@ -243,9 +243,8 @@ public class SOAPLoggingHandler implements SOAPHandler&lt;SOAPMessageContext&gt;
 <para>
  It is also important to note that when different handler types are used (such as <code>LogicalHandler</code> and <code>SOAPHandler</code>), 
  each type executes as a group in different phases of message processing. This means that ordering cannot be controlled between handlers of different types, 
- as they run in separate processing phases as defined by the Jakarta™ XML Web Services specification. 
- The detailed rules for handler ordering across different handler types are described in <xref linkend="service.jakartaws-handler-ordering"/>.
- Users should consult that section of the Jakarta™ XML Web Services specification to understand how handlers of different types interact during message processing.
+ as they run in separate processing phases. The detailed rules for handler ordering across different handler types are described in the 
+ Jakarta™ XML Web Services specification (see <xref linkend="service.jakartaws-handler-ordering"/>).
 </para>
 </section>
     <section xml:id="service.jakartaws.handler.services.target">
