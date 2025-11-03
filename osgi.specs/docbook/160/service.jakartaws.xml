@@ -114,6 +114,11 @@
    <section xml:id="service.jakartaws.whiteboard">
     <title>Jakarta™ XML Web Services Whiteboard</title>
 
+    <para>The Jakarta™ XML Web Services specification defines the programming model and APIs for web service endpoints and handlers, 
+    but does not prescribe how these components should be discovered and managed in a dynamic environment. 
+    In a traditional Jakarta EE application server, endpoints are typically deployed as part of a WAR file with static configuration.
+    This static deployment model conflicts with OSGi's dynamic nature where bundles can be installed, started, stopped, and uninstalled at any time.</para>
+    
     <para>While in a traditional web application the configuration is rather static and known in advance, in OSGi items can come and go anytime and code should be aware of this dynamism.
         Also, registration of listeners must happen before an endpoint is published, and only weak typing makes it hard to handle this correctly manually.
         As a result, the publishing of Web Services in the current state of the specification goes against the loose coupling concept usually provided by OSGi 
@@ -122,6 +127,8 @@
         <para>
          It is therefore the responsibility of the Web Services Whiteboard to handle these cases in a transparent manner so the user can focus on the actual work and 
          use common dependency injection techniques like Declarative Services to inject dependencies.
+         The whiteboard pattern allows endpoint implementors and handlers to be registered as OSGi services, and the whiteboard implementation automatically manages their lifecycle,
+         publishing and unpublishing endpoints as services come and go.
          </para>
    </section>
    
@@ -131,7 +138,9 @@
     <para>Endpoint Implementors can be registered with the Jakarta™ XML Web Services Whiteboard by registering them as Whiteboard
     services. This means that the endpoint POJO implementations are registered in the Service Registry. As Web Service Endpoints are
     POJOs, they may be registered using <emphasis>any</emphasis> valid service interface, including <code>Object</code>, and use any
-    annotations on the endpoint object, just as they would outside of OSGi.</para>
+    Jakarta™ XML Web Services annotations on the endpoint object, just as they would outside of OSGi. 
+    The Jakarta™ XML Web Services specification defines annotations such as <code>@WebService</code>, <code>@WebMethod</code>, and <code>@WebParam</code> 
+    to declare web service endpoints and their operations (see <xref linkend="service.jakartaws-i21217577"/> for details on these annotations).</para>
 
     <para>To be picked up as endpoints, the POJO must be registered with the
     <code>osgi.jakarta.xml.ws.endpoint.implementor</code> service property with a value of
@@ -145,7 +154,8 @@
     </para>
 
     <para>The code below shows a simple echo web service Endpoint Implementor. The <code>@WebService</code> and <code>@WebMethod</code> annotations are 
-      Jakarta annotations and therefore not processed by the Whiteboard runtime:
+      Jakarta™ XML Web Services annotations that define the service interface and operations; these annotations are processed by the Jakarta™ XML Web Services runtime, not by the Whiteboard runtime.
+      The Whiteboard runtime is only responsible for managing the lifecycle and registration of the endpoint:
     </para>
 
       <programlisting>@WebService
