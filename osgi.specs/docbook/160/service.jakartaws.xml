@@ -473,7 +473,7 @@ public class SOAPLoggingHandler implements SOAPHandler&lt;SOAPMessageContext&gt;
 
       <programlisting>Provide-Capability: osgi.implementation;
  osgi.implementation=osgi.webservice";
- uses:="org.osgi.service.webservice.runtime,org.osgi.service.webservice.runtime.dto,jakarta.xml.ws.handler,jakarta.xml.ws,org.osgi.dto,org.osgi.framework.dto";
+ uses:="jakarta.xml.ws.handler,jakarta.xml.ws";
  version:Version="<xref endterm="org.osgi.service.webservice-version.number"
           linkend="org.osgi.service.webservice"/>"</programlisting>
 
@@ -498,7 +498,7 @@ public class SOAPLoggingHandler implements SOAPHandler&lt;SOAPMessageContext&gt;
 
       <programlisting>Provide-Capability: osgi.service;
  objectClass:List&lt;String&gt;="org.osgi.service.webservice.runtime.WebserviceServiceRuntime";
- uses:="org.osgi.service.webservice.runtime,org.osgi.service.webservice.runtime.dto,jakarta.xml.ws.handler,jakarta.xml.ws,org.osgi.dto,org.osgi.framework.dto"</programlisting>
+ uses:="org.osgi.service.webservice.runtime,org.osgi.service.webservice.runtime.dto"</programlisting>
 
       <para>This capability must follow the rules defined for the <xref
       linkend="service.namespaces-osgi.service.namespace"/>.</para>
