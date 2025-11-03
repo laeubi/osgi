@@ -53,6 +53,12 @@
     </para>
     
     <para>
+    This specification builds upon the concepts and terminology defined in the <xref linkend="service.jakartaws-i21217577"/>. 
+    Users and implementors of this specification are expected to be familiar with the Jakarta™ XML Web Services specification, 
+    as this whiteboard specification depends on those foundational concepts and does not redefine them.
+    </para>
+    
+    <para>
     Managing endpoints in a dynamic way with integration to different listeners and transports can be a challenging task. This specification aims to make this task much easier using the well-known <xref linkend="service.jakartaws-whiteboard.pattern.ref" />
     and allow integration with existing transport specifications.
     
@@ -233,6 +239,13 @@ public class SOAPLoggingHandler implements SOAPHandler&lt;SOAPMessageContext&gt;
 </para>
 <para>
  As a result, while handlers are assembled in order of service ranking (highest first), the actual processing order depends on the message direction. Users should be aware of this distinction to avoid confusion about handler execution order.
+</para>
+<para>
+ It is also important to note that when different handler types are used (such as <code>LogicalHandler</code> and <code>SOAPHandler</code>), 
+ each type executes as a group in different phases of message processing. This means that ordering cannot be controlled between handlers of different types, 
+ as they run in separate processing phases as defined by the Jakarta™ XML Web Services specification. 
+ The detailed rules for handler ordering across different handler types are described in <xref linkend="service.jakartaws-handler-ordering"/>.
+ Users should consult that section of the Jakarta™ XML Web Services specification to understand how handlers of different types interact during message processing.
 </para>
 </section>
     <section xml:id="service.jakartaws.handler.services.target">
@@ -581,6 +594,14 @@ public class SOAPLoggingHandler implements SOAPHandler&lt;SOAPMessageContext&gt;
 
         <biblioid class="uri">
           <link xlink:href="https://jakarta.ee/specifications/xml-web-services/4.0/jakarta-xml-ws-spec-4.0#handlerexecution"/>
+        </biblioid>
+      </bibliomixed>
+      
+      <bibliomixed xml:id="service.jakartaws-handler-ordering">
+        <title>Jakarta™ XML Web Services Handler Ordering</title>
+
+        <biblioid class="uri">
+          <link xlink:href="https://jakarta.ee/specifications/xml-web-services/4.0/jakarta-xml-ws-spec-4.0#handlerordering"/>
         </biblioid>
       </bibliomixed>
       
