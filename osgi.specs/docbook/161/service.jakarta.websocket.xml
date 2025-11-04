@@ -52,7 +52,7 @@
     </para>
 
     <para>Whiteboard Specification for Jakarta™ WebSocket Services implementations must support
-    at least version 2.2 of the Jakarta™ WebSocket API and registering of <emphasis>annotated server endpoints</emphasis> using the whiteboard pattern and allow client endpoints to
+    at least version 2.2 of the Jakarta™ WebSocket API. Implementations must support registration of <emphasis>annotated server endpoints</emphasis> using the whiteboard pattern and allow client endpoints to
     establish connections using the <emphasis>WebSocketContainer</emphasis> interface.</para>
 
     <section>
