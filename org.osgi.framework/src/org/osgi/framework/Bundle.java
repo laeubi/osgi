@@ -1238,7 +1238,7 @@ public interface Bundle extends Comparable<Bundle> {
 	 *         not have the appropriate {@code AdminPermission[this,RESOURCE]}
 	 *         and the Java Runtime Environment supports permissions, or if this
 	 *         bundle has been uninstalled.
-	 * @since 1.10
+	 * @since 1.11
 	 */
 	default Optional<URL> entry(String path) {
 		try {
@@ -1279,7 +1279,7 @@ public interface Bundle extends Comparable<Bundle> {
 	 *         appropriate {@code AdminPermission[this,RESOURCE]} and the Java
 	 *         Runtime Environment supports permissions, or if this bundle has
 	 *         been uninstalled.
-	 * @since 1.10
+	 * @since 1.11
 	 */
 	default Stream<String> entryPaths(String path) {
 		try {
@@ -1364,7 +1364,7 @@ public interface Bundle extends Comparable<Bundle> {
 	 *         bundle are returned first followed by the entries from attached
 	 *         fragments in attachment order. If this bundle is a fragment, then
 	 *         only matching entries in this fragment are returned.
-	 * @since 1.10
+	 * @since 1.11
 	 */
 	default Stream<URL> entries(String path, String filePattern, boolean recurse) {
 		try {
