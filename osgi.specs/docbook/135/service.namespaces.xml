@@ -612,7 +612,7 @@ DynamicImport-Package:
     <programlisting>Provide-Capability: osgi.service;
     objectClass:List&lt;String&gt;="jakarta.servlet.Servlet";
     osgi.http.whiteboard.servlet.pattern="/myapp/*";
-    uses:="jakarta.servlet"</programlisting></invoke>
+    uses:="jakarta.servlet"</programlisting>
 
     <para>A bundle requiring a servlet with a specific context path could
     then use:</para>
@@ -620,7 +620,6 @@ DynamicImport-Package:
     <programlisting>Require-Capability: osgi.service;
     filter:="(&amp;(objectClass=jakarta.servlet.Servlet)(osgi.http.whiteboard.servlet.pattern=/myapp/*))";
     effective:="active"</programlisting>
-</invoke>
 
     <section>
       <title>Versioning</title>
