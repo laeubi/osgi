@@ -2383,7 +2383,77 @@ public class MyComponent {
       the component instance.</para>
 
       <para>If the component description specifies a service, the class must
-      implement all interfaces that are provided by the service.</para>
+      either implement all interfaces that are provided by the service, or,
+      if the component provides exactly one service interface, the class may
+      implement <code>ServiceFactory&lt;S&gt;</code> or
+      <code>PrototypeServiceFactory&lt;S&gt;</code> where <code>S</code> is
+      the single service interface being provided. When a component
+      implements a <code>ServiceFactory</code> or
+      <code>PrototypeServiceFactory</code>, the component instance itself
+      acts as the factory for creating service objects. The factory's
+      <code>getService</code> method is called by SCR to obtain the actual
+      service object to provide to service consumers. This allows components
+      to provide services whose implementation classes are not directly
+      instantiable by SCR, such as final classes requiring constructor
+      arguments, Java records, or classes with invisible constructors that
+      can only be instantiated via static factory methods.</para>
+
+      <para>When a component implements <code>ServiceFactory&lt;S&gt;</code>
+      or <code>PrototypeServiceFactory&lt;S&gt;</code>, the service scope
+      specified by the component description determines how SCR interacts
+      with the factory:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>If the service scope is <code>singleton</code>, the component
+          configuration is activated once when the service is first
+          requested, and the component instance's <code>getService</code>
+          method is called to obtain the service object for each requesting
+          bundle. The same component instance (factory) is used for all
+          requests.</para>
+        </listitem>
+
+        <listitem>
+          <para>If the service scope is <code>bundle</code>, a separate
+          component configuration is created and activated for each bundle
+          requesting the service, and each component instance's
+          <code>getService</code> method is called to obtain the service
+          object for that bundle.</para>
+        </listitem>
+
+        <listitem>
+          <para>If the service scope is <code>prototype</code>, the behavior
+          depends on the type of factory implemented:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>If the component implements
+              <code>PrototypeServiceFactory&lt;S&gt;</code>, a separate
+              component configuration is created and activated for each
+              distinct service request, and each component instance's
+              <code>getService</code> method is called to obtain a distinct
+              service object.</para>
+            </listitem>
+
+            <listitem>
+              <para>If the component implements
+              <code>ServiceFactory&lt;S&gt;</code> (not the prototype
+              variant), a separate component configuration is created and
+              activated for each bundle requesting the service, and the
+              component instance's <code>getService</code> method is called
+              once per bundle to obtain the service object for that
+              bundle.</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist>
+
+      <para>The service object returned by the factory's
+      <code>getService</code> method must be an instance of all the service
+      interfaces specified in the component description. If the returned
+      service object is <code>null</code> or does not implement all the
+      required service interfaces, SCR must log an error and return
+      <code>null</code> to the service consumer.</para>
     </section>
 
     <section xml:id="service.component-property.properties.elements">
@@ -2743,11 +2813,17 @@ public class FooImpl {
               specified Java class should be an interface rather than a class,
               however specifying a class is supported. The component
               implementation class must implement all the specified service
-              interfaces.</para><para>The Component annotation can specify the
-              provided services, if this element is not specified all directly
-              implemented interfaces on the component's type are defined as
-              service interfaces. Specifying an empty array indicates that no
-              service should be registered.</para></entry>
+              interfaces, or, if exactly one service interface is provided, the
+              component implementation class may implement
+              <code>ServiceFactory&lt;S&gt;</code> or
+              <code>PrototypeServiceFactory&lt;S&gt;</code> where
+              <code>S</code> is the single service interface. See <xref
+              linkend="service.component-implementation.element"/>.</para><para>The
+              Component annotation can specify the provided services, if this
+              element is not specified all directly implemented interfaces on
+              the component's type are defined as service interfaces. Specifying
+              an empty array indicates that no service should be
+              registered.</para></entry>
             </row>
           </tbody>
         </tgroup>
@@ -2766,6 +2842,36 @@ public class FooImpl {
 
       <programlisting>@Component
 public class Foo implements EventHandler { ... }</programlisting>
+
+      <para>Alternatively, a component can implement a service factory when
+      providing exactly one service. This is useful when the service
+      implementation class cannot be directly instantiated by SCR, such as
+      final classes, Java records, or classes with invisible
+      constructors:</para>
+
+      <programlisting>&lt;service&gt;
+    &lt;provide interface="com.example.DataService"/&gt;
+&lt;/service&gt;</programlisting>
+
+      <programlisting>@Component
+public class DataServiceFactoryComponent 
+    implements ServiceFactory&lt;DataService&gt; {
+    
+    @Override
+    public DataService getService(Bundle bundle, 
+                                   ServiceRegistration&lt;DataService&gt; reg) {
+        // Create and return the actual service object
+        // which may be a final class, record, etc.
+        return new DataServiceImpl(/* constructor args */);
+    }
+    
+    @Override
+    public void ungetService(Bundle bundle, 
+                             ServiceRegistration&lt;DataService&gt; reg,
+                             DataService service) {
+        // Clean up the service object if needed
+    }
+}</programlisting>
     </section>
 
     <section xml:id="service.component-reference.element">
@@ -3558,6 +3664,18 @@ public class FooImpl implements Foo {
       consist of the component properties as defined in <xref
       linkend="service.component-service.properties"/>.</para>
 
+      <para>When the component implementation class itself implements
+      <code>ServiceFactory&lt;S&gt;</code> or
+      <code>PrototypeServiceFactory&lt;S&gt;</code>, SCR must still register a
+      <code>ServiceFactory</code> or <code>PrototypeServiceFactory</code>
+      object with the Framework, but when the service is requested, SCR
+      activates the component configuration (creating the component instance
+      which is the factory), and then delegates to the component instance's
+      <code>getService</code> method to obtain the actual service object to
+      provide to the service consumer. Similarly, SCR must delegate to the
+      component instance's <code>ungetService</code> method when the service
+      consumer releases the service object.</para>
+
       <para>The activation of a component configuration must be delayed until
       its service is requested. When the service is requested, if the service
       has the <code>scope</code> attribute set to <code>bundle</code>, SCR
@@ -3572,6 +3690,18 @@ public class FooImpl implements Foo {
       <xref
       linkend="org.osgi.service.component.ComponentContext.getUsingBundle--"
       xrefstyle="hyperlink"/> method on the Component Context.</para>
+
+      <para>When the component implementation class implements the service
+      interfaces directly, the component instance itself is returned as the
+      service object. When the component implementation class implements
+      <code>ServiceFactory&lt;S&gt;</code> or
+      <code>PrototypeServiceFactory&lt;S&gt;</code>, the component instance is
+      not returned as the service object. Instead, SCR must call the component
+      instance's <code>getService</code> method to obtain the actual service
+      object, and must return that service object to the service consumer. The
+      service object returned by the component instance's
+      <code>getService</code> method must be validated to ensure it is an
+      instance of all the specified service interfaces.</para>
 
       <para>The activation of delayed components is depicted in a state
       diagram in <xref linkend="i1462979"/>. Notice that multiple component
