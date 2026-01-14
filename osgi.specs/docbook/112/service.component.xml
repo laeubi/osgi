@@ -2393,11 +2393,13 @@ public class MyComponent {
       instance directly with the OSGi Framework as a service factory, and the
       Framework will call the component instance's <code>getService</code>
       and <code>ungetService</code> methods as defined in the OSGi Core
-      specification. This allows components to provide services whose
-      implementation classes are not directly instantiable by SCR, such as
-      final classes requiring constructor arguments, Java records, or classes
-      with invisible constructors that can only be instantiated via static
-      factory methods.</para>
+      specification. See <xref linkend="framework.service.serviceFactory"/>
+      and <xref linkend="framework.service.prototypeServiceFactory"/>. This
+      allows components to provide services whose implementation classes are
+      not directly instantiable by SCR, such as final classes requiring
+      constructor arguments, Java records, or classes with invisible
+      constructors that can only be instantiated via static factory
+      methods.</para>
 
       <para>When a component implements <code>ServiceFactory&lt;S&gt;</code>
       or <code>PrototypeServiceFactory&lt;S&gt;</code>, the
@@ -2405,7 +2407,9 @@ public class MyComponent {
       ignored. The service scope is determined by the type of factory
       implemented: <code>ServiceFactory</code> provides bundle scope
       semantics, and <code>PrototypeServiceFactory</code> provides prototype
-      scope semantics, as defined in the OSGi Core specification.</para>
+      scope semantics, as defined in the OSGi Core specification. See <xref
+      linkend="framework.service.serviceFactory"/> and <xref
+      linkend="framework.service.prototypeServiceFactory"/>.</para>
     </section>
 
     <section xml:id="service.component-property.properties.elements">
@@ -3624,7 +3628,9 @@ public class FooImpl implements Foo {
       component instance's <code>getService</code> and
       <code>ungetService</code> methods according to the semantics defined in
       the OSGi Core specification for <code>ServiceFactory</code> or
-      <code>PrototypeServiceFactory</code>.</para>
+      <code>PrototypeServiceFactory</code>. See <xref
+      linkend="framework.service.serviceFactory"/> and <xref
+      linkend="framework.service.prototypeServiceFactory"/>.</para>
 
       <para>The activation of a component configuration must be delayed until
       its service is requested. When the service is requested, if the service
