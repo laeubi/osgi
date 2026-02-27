@@ -93,6 +93,21 @@ public class GenaSocket {
 		}
 	}
 
+	// Extracts host:port from a URL string (e.g. "http://host:port/path"
+	// returns "host:port"). If the input is not a URL, returns it unchanged.
+	static String extractHostPort(String urlString) {
+		int schemeEnd = urlString.indexOf("://");
+		if (schemeEnd >= 0) {
+			String hostPort = urlString.substring(schemeEnd + 3);
+			int pathStart = hostPort.indexOf('/');
+			if (pathStart >= 0) {
+				hostPort = hostPort.substring(0, pathStart);
+			}
+			return hostPort;
+		}
+		return urlString;
+	}
+
 	// This method parses the request and if the request is unable to get parsed
 	boolean parseRequest() {
 		requestparser = new RequestProcessor(in);
