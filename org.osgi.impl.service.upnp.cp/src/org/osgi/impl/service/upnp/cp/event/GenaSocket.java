@@ -99,11 +99,15 @@ public class GenaSocket {
 		int schemeEnd = urlString.indexOf("://");
 		if (schemeEnd >= 0) {
 			String hostPort = urlString.substring(schemeEnd + 3);
-			int pathStart = hostPort.indexOf('/');
-			if (pathStart >= 0) {
-				hostPort = hostPort.substring(0, pathStart);
+			int end = hostPort.length();
+			for (int i = 0; i < hostPort.length(); i++) {
+				char c = hostPort.charAt(i);
+				if (c == '/' || c == '?' || c == '#') {
+					end = i;
+					break;
+				}
 			}
-			return hostPort;
+			return hostPort.substring(0, end);
 		}
 		return urlString;
 	}
