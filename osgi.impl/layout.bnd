@@ -24,6 +24,7 @@ jar.cmpn.impls: \
 	org.osgi.impl.service.coordinator,\
 	org.osgi.impl.service.event,\
 	org.osgi.impl.service.feature,\
+	org.osgi.impl.service.featurelauncher,\
 	org.osgi.impl.service.jakartars,\
 	org.osgi.impl.service.jpa,\
 	org.osgi.impl.service.log.stream,\

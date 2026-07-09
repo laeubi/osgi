@@ -96,6 +96,7 @@ org.apache.aries.cdi:org.apache.aries.cdi.weld:1.1.4
 org.apache.aries.jpa:org.apache.aries.jpa.eclipselink.adapter:2.4.0
 org.apache.aries.spifly:org.apache.aries.spifly.dynamic.bundle:1.0.8
 org.apache.aries.spifly:org.apache.aries.spifly.dynamic.framework.extension:1.3.3
+org.apache.aries.spifly:org.apache.aries.spifly.dynamic.framework.extension:1.3.7
 
 jakarta.servlet:jakarta.servlet-api:5.0.0
 org.apache.felix:org.apache.felix.configadmin:1.9.26
@@ -294,3 +295,20 @@ org.jvnet.staxex:stax-ex:2.1.0
 
 com.sun.xml.bind:jaxb-core:4.0.5
 com.sun.xml.bind:jaxb-impl:4.0.5
+
+# Feature Launcher
+org.eclipse.osgi-technology.featurelauncher:runtime:1.0.0-SNAPSHOT
+org.eclipse.osgi-technology.featurelauncher.repository:artifact.maven:1.0.0-SNAPSHOT
+org.eclipse.osgi-technology.featurelauncher.repository:common.osgi:1.0.0-SNAPSHOT
+org.eclipse.osgi-technology.featurelauncher.repository:spi:1.0.0-SNAPSHOT
+org.eclipse.osgi-technology.featurelauncher.launch:launcher:1.0.0-SNAPSHOT
+org.eclipse.osgi-technology.featurelauncher.launch:secondstage:1.0.0-SNAPSHOT
+org.eclipse.osgi-technology.featurelauncher.launch:all.lite:1.0.0-SNAPSHOT
+org.eclipse.osgi-technology.featurelauncher.launch:all.maven:1.0.0-SNAPSHOT
+org.eclipse.osgi-technology.featurelauncher.featureservice:featureservice:1.0.0-SNAPSHOT
+com.grack:nanojson:1.10
+
+# Feature Launcher
+org.glassfish:jakarta.json:2.0.1
+org.slf4j:slf4j-api:2.0.11
+org.slf4j:slf4j-simple:2.0.11
