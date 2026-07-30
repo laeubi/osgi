@@ -64,6 +64,12 @@ public class JdkHttpServerRuntimeDTO extends DTO {
 	public AuthenticatorDTO[]			authenticators;
 
 	/**
+	 * The currently active resource registrations. This value is never
+	 * {@code null} but may be empty.
+	 */
+	public ResourceDTO[]				resources;
+
+	/**
 	 * The handlers that failed to register. This value is never
 	 * {@code null} but may be empty.
 	 */
@@ -80,4 +86,10 @@ public class JdkHttpServerRuntimeDTO extends DTO {
 	 * {@code null} but may be empty.
 	 */
 	public FailedAuthenticatorDTO[]	failedAuthenticators;
+
+	/**
+	 * The resources that failed to register. This value is never
+	 * {@code null} but may be empty.
+	 */
+	public FailedResourceDTO[]			failedResources;
 }

@@ -20,6 +20,7 @@ package org.osgi.service.jdkhttp.runtime;
 
 import org.osgi.annotation.versioning.ProviderType;
 import org.osgi.service.jdkhttp.runtime.dto.JdkHttpServerRuntimeDTO;
+import org.osgi.service.jdkhttp.runtime.dto.RequestInfoDTO;
 
 /**
  * The JdkHttpServerRuntime service represents the runtime information of a
@@ -42,4 +43,20 @@ public interface JdkHttpServerRuntime {
 	 * @return The runtime DTO.
 	 */
 	public JdkHttpServerRuntimeDTO getRuntimeDTO();
+
+	/**
+	 * Calculates how a request to the given path would be processed by the
+	 * whiteboard implementation.
+	 * <p>
+	 * The returned DTO describes the handler or resource context whose
+	 * context path is the longest prefix of the given path, together with
+	 * the filters and the authenticator applied to that context. If no
+	 * handler or resource context matches, both the {@code handlerDTO} and
+	 * the {@code resourceDTO} field of the result are {@code null}.
+	 *
+	 * @param path The request path, relative to the root of the JDK
+	 *        HttpServer Whiteboard implementation.
+	 * @return The request info DTO for the specified path.
+	 */
+	public RequestInfoDTO calculateRequestInfoDTO(String path);
 }

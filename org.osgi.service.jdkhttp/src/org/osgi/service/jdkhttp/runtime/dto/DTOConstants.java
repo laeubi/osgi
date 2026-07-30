@@ -20,6 +20,11 @@ package org.osgi.service.jdkhttp.runtime.dto;
 
 /**
  * Defines standard constants for the DTOs.
+ * <p>
+ * The failure reason constants reuse the numeric values of the identically
+ * named constants defined by the OSGi Servlet Whiteboard Specification's
+ * {@code org.osgi.service.servlet.runtime.dto.DTOConstants}, so that the same
+ * failure reason has the same meaning across whiteboard specifications.
  *
  * @author $Id$
  */
@@ -34,25 +39,30 @@ public final class DTOConstants {
 	public static final int	FAILURE_REASON_UNKNOWN						= 0;
 
 	/**
-	 * The service did not provide a valid
-	 * {@link org.osgi.service.jdkhttp.whiteboard.JdkHttpWhiteboardConstants#JDK_HTTP_CONTEXT_PATH}
-	 * or
-	 * {@link org.osgi.service.jdkhttp.whiteboard.JdkHttpWhiteboardConstants#JDK_HTTP_FILTER_PATTERN}
-	 * property.
-	 */
-	public static final int	FAILURE_REASON_INVALID_CONTEXT_PATH		= 1;
-
-	/**
-	 * Another service with a higher {@code service.ranking} is already
-	 * registered at the same context path.
+	 * Service is shadowed by another service.
 	 * <p>
-	 * See {@link org.osgi.framework.ServiceReference#compareTo(Object)}.
+	 * For example, another service with the same context path or pattern but
+	 * having a higher service ranking. See
+	 * {@link org.osgi.framework.ServiceReference#compareTo(Object)}.
 	 */
-	public static final int	FAILURE_REASON_SHADOWED_BY_OTHER_SERVICE	= 2;
+	public static final int	FAILURE_REASON_SHADOWED_BY_OTHER_SERVICE	= 3;
 
 	/**
-	 * An exception occurred while initializing the handler, filter, or
-	 * authenticator context.
+	 * An exception occurred while initializing the handler, filter,
+	 * authenticator, or resource context.
 	 */
-	public static final int	FAILURE_REASON_EXCEPTION_ON_INIT			= 3;
+	public static final int	FAILURE_REASON_EXCEPTION_ON_INIT			= 4;
+
+	/**
+	 * The service is registered in the service registry but getting the
+	 * service fails as it returns {@code null}.
+	 */
+	public static final int	FAILURE_REASON_SERVICE_NOT_GETTABLE			= 5;
+
+	/**
+	 * The service is registered in the service registry but the service
+	 * properties are invalid, for example a missing or malformed context
+	 * path or pattern property.
+	 */
+	public static final int	FAILURE_REASON_VALIDATION_FAILED			= 6;
 }

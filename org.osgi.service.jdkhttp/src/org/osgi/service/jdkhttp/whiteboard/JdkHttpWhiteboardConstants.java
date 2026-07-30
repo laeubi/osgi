@@ -90,6 +90,33 @@ public final class JdkHttpWhiteboardConstants {
 	public static final String	JDK_HTTP_AUTHENTICATOR_REALM			= "osgi.http.jdk.authenticator.realm";
 
 	/**
+	 * Service property specifying the context path patterns at which
+	 * bundle resources are served.
+	 * <p>
+	 * The value is a {@code String} or {@code String[]} of context paths,
+	 * each starting with {@code /}. A service registered with this property
+	 * causes the whiteboard to serve entries of the registering bundle below
+	 * the {@link #JDK_HTTP_RESOURCE_PREFIX prefix} at these paths. The
+	 * service object itself is never used and can be any object.
+	 * <p>
+	 * Value: {@value}
+	 */
+	public static final String	JDK_HTTP_RESOURCE_PATTERN				= "osgi.http.jdk.resource.pattern";
+
+	/**
+	 * Service property specifying the bundle entry prefix from which
+	 * resources are served.
+	 * <p>
+	 * The value is a {@code String} that must not end with {@code /}, except
+	 * for {@code "/"} denoting the root of the bundle. A request below a
+	 * {@link #JDK_HTTP_RESOURCE_PATTERN pattern} is mapped to the bundle
+	 * entry {@code prefix + relative path}.
+	 * <p>
+	 * Value: {@value}
+	 */
+	public static final String	JDK_HTTP_RESOURCE_PREFIX				= "osgi.http.jdk.resource.prefix";
+
+	/**
 	 * Optional service property used to target a specific JDK HttpServer
 	 * Whiteboard implementation.
 	 * <p>

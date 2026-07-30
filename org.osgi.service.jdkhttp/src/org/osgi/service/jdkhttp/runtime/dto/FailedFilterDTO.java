@@ -31,9 +31,10 @@ public class FailedFilterDTO extends FilterDTO {
 	 * The reason why the filter represented by this DTO is not used.
 	 *
 	 * @see DTOConstants#FAILURE_REASON_UNKNOWN
-	 * @see DTOConstants#FAILURE_REASON_INVALID_CONTEXT_PATH
 	 * @see DTOConstants#FAILURE_REASON_SHADOWED_BY_OTHER_SERVICE
 	 * @see DTOConstants#FAILURE_REASON_EXCEPTION_ON_INIT
+	 * @see DTOConstants#FAILURE_REASON_SERVICE_NOT_GETTABLE
+	 * @see DTOConstants#FAILURE_REASON_VALIDATION_FAILED
 	 */
 	public int	failureReason;
 }
